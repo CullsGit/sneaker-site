@@ -1,0 +1,9 @@
+{
+    "core": null,
+    "phpVersion": "8.2",
+    "plugins": [],
+    "themes": ["./wp-content/themes/sneaker-theme" ],
+    "mappings": {
+        "wp-content": "./wp-content"
+    }
+}
