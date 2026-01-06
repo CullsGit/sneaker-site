@@ -1,0 +1,13 @@
+# WordPress core (wp-env downloads this)
+wordpress/
+
+# Node
+node_modules/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Env
+.env
