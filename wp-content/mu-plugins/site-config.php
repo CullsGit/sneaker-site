@@ -41,3 +41,68 @@ add_action('init', function (): void {
         'rewrite'      => ['slug' => 'brand'],
     ]);
 });
+
+add_action('add_meta_boxes', function (): void {
+    add_meta_box(
+        'sneaker_details',
+        __('Sneaker Details', 'sneaker-theme'),
+        function (WP_Post $post): void {
+            $sku          = (string) get_post_meta($post->ID, '_sneaker_sku', true);
+            $retail_price = (string) get_post_meta($post->ID, '_sneaker_retail_price', true);
+            $release_date = (string) get_post_meta($post->ID, '_sneaker_release_date', true);
+
+            wp_nonce_field('sneaker_details_save', 'sneaker_details_nonce');
+?>
+        <p>
+            <label for="sneaker_sku"><strong><?php echo esc_html__('SKU', 'sneaker-theme'); ?></strong></label><br>
+            <input type="text" id="sneaker_sku" name="sneaker_sku" value="<?php echo esc_attr($sku); ?>" class="regular-text" />
+        </p>
+
+        <p>
+            <label for="sneaker_retail_price"><strong><?php echo esc_html__('Retail price (number)', 'sneaker-theme'); ?></strong></label><br>
+            <input type="number" step="0.01" min="0" id="sneaker_retail_price" name="sneaker_retail_price" value="<?php echo esc_attr($retail_price); ?>" class="regular-text" />
+        </p>
+
+        <p>
+            <label for="sneaker_release_date"><strong><?php echo esc_html__('Release date (YYYY-MM-DD)', 'sneaker-theme'); ?></strong></label><br>
+            <input type="date" id="sneaker_release_date" name="sneaker_release_date" value="<?php echo esc_attr($release_date); ?>" />
+        </p>
+<?php
+        },
+        'sneaker',
+        'side',
+        'default'
+    );
+});
+
+add_action('save_post_sneaker', function (int $post_id): void {
+    // 1) Nonce check
+    if (
+        empty($_POST['sneaker_details_nonce']) ||
+        ! wp_verify_nonce((string) $_POST['sneaker_details_nonce'], 'sneaker_details_save')
+    ) {
+        return;
+    }
+
+    // 2) Autosave / revision guard
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    // 3) Capability check
+    if (! current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    // 4) Sanitise + save
+    $sku = isset($_POST['sneaker_sku']) ? sanitize_text_field((string) $_POST['sneaker_sku']) : '';
+    update_post_meta($post_id, '_sneaker_sku', $sku);
+
+    $price_raw = isset($_POST['sneaker_retail_price']) ? (string) $_POST['sneaker_retail_price'] : '';
+    $price     = ($price_raw === '') ? '' : (string) (float) $price_raw;
+    update_post_meta($post_id, '_sneaker_retail_price', $price);
+
+    $date_raw = isset($_POST['sneaker_release_date']) ? (string) $_POST['sneaker_release_date'] : '';
+    $date     = preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_raw) ? $date_raw : '';
+    update_post_meta($post_id, '_sneaker_release_date', $date);
+});

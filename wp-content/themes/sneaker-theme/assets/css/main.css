@@ -1,3 +1,6 @@
 .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
 .site-header, .site-footer { border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
 .site-title { font-weight: 700; text-decoration: none; }
+.sneaker__details { display: grid; grid-template-columns: 120px 1fr; gap: 8px 16px; margin: 16px 0; }
+.sneaker__details dt { font-weight: 700; }
+.sneaker__details dd { margin: 0; }

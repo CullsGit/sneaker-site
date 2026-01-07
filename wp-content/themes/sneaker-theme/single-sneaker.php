@@ -8,6 +8,32 @@ get_header(); ?>
     <?php while (have_posts()) : the_post(); ?>
         <article <?php post_class('sneaker'); ?>>
             <h1><?php the_title(); ?></h1>
+            <?php
+            $sku          = (string) get_post_meta(get_the_ID(), '_sneaker_sku', true);
+            $retail_price = (string) get_post_meta(get_the_ID(), '_sneaker_retail_price', true);
+            $release_date = (string) get_post_meta(get_the_ID(), '_sneaker_release_date', true);
+
+            $details = [];
+
+            if ($sku !== '') {
+                $details[] = ['SKU', $sku];
+            }
+            if ($retail_price !== '') {
+                $details[] = ['Retail', '$' . number_format((float) $retail_price, 2)];
+            }
+            if ($release_date !== '') {
+                $details[] = ['Release', $release_date];
+            }
+            ?>
+
+            <?php if (!empty($details)) : ?>
+                <dl class="sneaker__details">
+                    <?php foreach ($details as [$label, $value]) : ?>
+                        <dt><?php echo esc_html($label); ?></dt>
+                        <dd><?php echo esc_html($value); ?></dd>
+                    <?php endforeach; ?>
+                </dl>
+            <?php endif; ?>
 
             <?php if (has_post_thumbnail()) : ?>
                 <div class="sneaker__image">
