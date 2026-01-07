@@ -106,3 +106,38 @@ add_action('save_post_sneaker', function (int $post_id): void {
     $date     = preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_raw) ? $date_raw : '';
     update_post_meta($post_id, '_sneaker_release_date', $date);
 });
+
+add_action('pre_get_posts', function (WP_Query $query): void {
+    if (is_admin() || ! $query->is_main_query()) {
+        return;
+    }
+
+    // Only target the Sneaker archive: /sneakers/
+    if (! $query->is_post_type_archive('sneaker')) {
+        return;
+    }
+
+    $query->set('meta_key', '_sneaker_release_date');
+    $query->set('orderby', 'meta_value');
+    $query->set('meta_type', 'DATE');
+    $query->set('order', 'DESC');
+
+    // Optional: only show sneakers that actually have a release date set
+    $query->set('meta_query', [
+        [
+            'key'     => '_sneaker_release_date',
+            'compare' => 'EXISTS',
+        ],
+    ]);
+    $brand = isset($_GET['brand']) ? sanitize_title((string) $_GET['brand']) : '';
+
+    if ($brand !== '') {
+        $query->set('tax_query', [
+            [
+                'taxonomy' => 'brand',
+                'field'    => 'slug',
+                'terms'    => [$brand],
+            ],
+        ]);
+    }
+});

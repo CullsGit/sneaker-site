@@ -6,6 +6,26 @@ get_header(); ?>
 
 <main class="wrap">
     <h1><?php echo esc_html(post_type_archive_title('', false)); ?></h1>
+    <?php
+    $current_brand = isset($_GET['brand']) ? sanitize_title((string) $_GET['brand']) : '';
+    $brands = get_terms([
+        'taxonomy'   => 'brand',
+        'hide_empty' => false,
+    ]);
+    ?>
+
+    <form method="get" action="<?php echo esc_url(get_post_type_archive_link('sneaker')); ?>">
+        <label for="brand"><strong><?php echo esc_html__('Filter by brand:', 'sneaker-theme'); ?></strong></label>
+        <select id="brand" name="brand" onchange="this.form.submit()">
+            <option value=""><?php echo esc_html__('All brands', 'sneaker-theme'); ?></option>
+            <?php foreach ($brands as $term) : ?>
+                <option value="<?php echo esc_attr($term->slug); ?>" <?php selected($current_brand, $term->slug); ?>>
+                    <?php echo esc_html($term->name); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <noscript><button type="submit"><?php echo esc_html__('Apply', 'sneaker-theme'); ?></button></noscript>
+    </form>
 
     <?php if (have_posts()) : ?>
         <ul>
