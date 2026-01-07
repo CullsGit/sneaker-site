@@ -37,7 +37,7 @@ get_header(); ?>
 
             <?php if (has_post_thumbnail()) : ?>
                 <div class="sneaker__image">
-                    <?php the_post_thumbnail('large'); ?>
+                    <?php the_post_thumbnail('sneaker-cover'); ?>
                 </div>
             <?php endif; ?>
 

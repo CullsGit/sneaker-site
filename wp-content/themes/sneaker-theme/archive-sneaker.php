@@ -14,6 +14,10 @@ get_header(); ?>
                     <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                     <?php the_excerpt(); ?>
                 </li>
+                <?php if (has_post_thumbnail()) : ?>
+                    <?php the_post_thumbnail('sneaker-cover'); ?>
+                <?php endif; ?>
+
             <?php endwhile; ?>
         </ul>
 

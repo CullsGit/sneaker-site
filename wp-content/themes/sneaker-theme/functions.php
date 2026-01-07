@@ -9,6 +9,12 @@ add_action('after_setup_theme', function (): void {
     register_nav_menus([
         'primary' => __('Primary Menu', 'sneaker-theme'),
     ]);
+    add_image_size(
+        'sneaker-cover',
+        600,   // width in px
+        600,   // height in px
+        true   // hard crop (exact size)
+    );
 });
 
 add_action('wp_enqueue_scripts', function (): void {
