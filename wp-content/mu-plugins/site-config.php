@@ -40,6 +40,20 @@ add_action('init', function (): void {
         'show_in_rest' => true,
         'rewrite'      => ['slug' => 'brand'],
     ]);
+    // 3) Taxonomy: Silhouette
+    // Creates:
+    // - Silhouette selector on Sneaker edit screen
+    // - URLs like /silhouette/air-jordan-1/
+    register_taxonomy('silhouette', ['sneaker'], [
+        'labels' => [
+            'name'          => __('Silhouettes', 'sneaker-theme'),
+            'singular_name' => __('Silhouette', 'sneaker-theme'),
+        ],
+        'public'       => true,
+        'hierarchical' => true,   // like Categories (optional, but useful)
+        'show_in_rest' => true,
+        'rewrite'      => ['slug' => 'silhouette'],
+    ]);
 });
 
 add_action('add_meta_boxes', function (): void {
