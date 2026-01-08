@@ -28,23 +28,17 @@ get_header(); ?>
     </form>
 
     <?php if (have_posts()) : ?>
-        <ul>
+        <div class="sneaker-grid">
             <?php while (have_posts()) : the_post(); ?>
-                <li>
-                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                    <?php the_excerpt(); ?>
-                </li>
-                <?php if (has_post_thumbnail()) : ?>
-                    <?php the_post_thumbnail('sneaker-cover'); ?>
-                <?php endif; ?>
-
+                <?php get_template_part('parts/card', 'sneaker'); ?>
             <?php endwhile; ?>
-        </ul>
+        </div>
 
         <?php the_posts_pagination(); ?>
     <?php else : ?>
         <p><?php echo esc_html__('No sneakers found.', 'sneaker-theme'); ?></p>
     <?php endif; ?>
+
 </main>
 
 <?php get_footer();
