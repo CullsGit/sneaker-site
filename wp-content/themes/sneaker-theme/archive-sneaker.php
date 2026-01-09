@@ -8,8 +8,15 @@ get_header(); ?>
     <h1><?php echo esc_html(post_type_archive_title('', false)); ?></h1>
     <?php
     $current_brand = isset($_GET['brand']) ? sanitize_title((string) $_GET['brand']) : '';
+    $current_status = isset($_GET['status']) ? sanitize_title((string) $_GET['status']) : '';
+
     $brands = get_terms([
         'taxonomy'   => 'brand',
+        'hide_empty' => false,
+    ]);
+
+    $statuses = get_terms([
+        'taxonomy'   => 'status',
         'hide_empty' => false,
     ]);
     ?>
@@ -37,13 +44,6 @@ get_header(); ?>
         </select>
 
     </form>
-    <?php
-    $current_status = isset($_GET['status']) ? sanitize_title((string) $_GET['status']) : '';
-    $statuses = get_terms([
-        'taxonomy'   => 'status',
-        'hide_empty' => false,
-    ]);
-    ?>
 
 
     <?php if (have_posts()) : ?>

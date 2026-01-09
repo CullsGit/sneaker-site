@@ -10,9 +10,6 @@ declare(strict_types=1);
 
 add_action('init', function (): void {
     // 1) Custom Post Type: Sneaker
-    // Creates:
-    // - Admin menu item "Sneakers"
-    // - URLs like /sneakers/ and /sneakers/air-jordan-1/
     register_post_type('sneaker', [
         'labels' => [
             'name'          => __('Sneakers', 'sneaker-theme'),
@@ -27,9 +24,6 @@ add_action('init', function (): void {
     ]);
 
     // 2) Taxonomy: Brand
-    // Creates:
-    // - Brand selector on Sneaker edit screen
-    // - URLs like /brand/nike/
     register_taxonomy('brand', ['sneaker'], [
         'labels' => [
             'name'          => __('Brands', 'sneaker-theme'),
@@ -41,9 +35,6 @@ add_action('init', function (): void {
         'rewrite'      => ['slug' => 'brand'],
     ]);
     // 3) Taxonomy: Silhouette
-    // Creates:
-    // - Silhouette selector on Sneaker edit screen
-    // - URLs like /silhouette/air-jordan-1/
     register_taxonomy('silhouette', ['sneaker'], [
         'labels' => [
             'name'          => __('Silhouettes', 'sneaker-theme'),
@@ -54,6 +45,7 @@ add_action('init', function (): void {
         'show_in_rest' => true,
         'rewrite'      => ['slug' => 'silhouette'],
     ]);
+    // 4) Taxonomy: Status
     register_taxonomy('status', ['sneaker'], [
         'labels' => [
             'name' => __('Statuses', 'sneaker-theme'),
