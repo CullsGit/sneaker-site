@@ -54,6 +54,28 @@ add_action('init', function (): void {
         'show_in_rest' => true,
         'rewrite'      => ['slug' => 'silhouette'],
     ]);
+    register_taxonomy('status', ['sneaker'], [
+        'labels' => [
+            'name' => __('Statuses', 'sneaker-theme'),
+            'singular_name' => __('Status', 'sneaker-theme'),
+        ],
+        'public'       => true,
+        'hierarchical' => true,   // <-- change to true for checkbox UI
+        'show_in_rest' => true,
+        'rewrite'      => ['slug' => 'status'],
+    ]);
+
+    $default_statuses = [
+        ['name' => 'Rumoured',  'slug' => 'rumoured'],
+        ['name' => 'Confirmed', 'slug' => 'confirmed'],
+        ['name' => 'Released',  'slug' => 'released'],
+    ];
+
+    foreach ($default_statuses as $t) {
+        if (!term_exists($t['slug'], 'status')) {
+            wp_insert_term($t['name'], 'status', ['slug' => $t['slug']]);
+        }
+    }
 });
 
 add_action('add_meta_boxes', function (): void {
@@ -153,5 +175,18 @@ add_action('pre_get_posts', function (WP_Query $query): void {
                 'terms'    => [$brand],
             ],
         ]);
+    }
+    $status_slug = isset($_GET['status']) ? sanitize_title((string) $_GET['status']) : '';
+
+    if ($status_slug !== '') {
+        $tax_query = (array) $query->get('tax_query');
+
+        $tax_query[] = [
+            'taxonomy' => 'status',
+            'field'    => 'slug',
+            'terms'    => [$status_slug],
+        ];
+
+        $query->set('tax_query', $tax_query);
     }
 });

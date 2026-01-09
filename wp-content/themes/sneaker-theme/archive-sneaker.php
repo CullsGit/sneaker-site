@@ -25,7 +25,26 @@ get_header(); ?>
             <?php endforeach; ?>
         </select>
         <noscript><button type="submit"><?php echo esc_html__('Apply', 'sneaker-theme'); ?></button></noscript>
+
+        <label for="status"><strong><?php echo esc_html__('Status:', 'sneaker-theme'); ?></strong></label>
+        <select id="status" name="status" onchange="this.form.submit()">
+            <option value=""><?php echo esc_html__('All statuses', 'sneaker-theme'); ?></option>
+            <?php foreach ($statuses as $term) : ?>
+                <option value="<?php echo esc_attr($term->slug); ?>" <?php selected($current_status, $term->slug); ?>>
+                    <?php echo esc_html($term->name); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
     </form>
+    <?php
+    $current_status = isset($_GET['status']) ? sanitize_title((string) $_GET['status']) : '';
+    $statuses = get_terms([
+        'taxonomy'   => 'status',
+        'hide_empty' => false,
+    ]);
+    ?>
+
 
     <?php if (have_posts()) : ?>
         <div class="sneaker-grid">

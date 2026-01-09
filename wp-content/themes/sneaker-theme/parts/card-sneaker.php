@@ -8,6 +8,9 @@ $release_date = (string) get_post_meta(get_the_ID(), '_sneaker_release_date', tr
 
 $brands = get_the_terms(get_the_ID(), 'brand');
 $brand  = (!empty($brands) && !is_wp_error($brands)) ? $brands[0]->name : '';
+$statuses = get_the_terms(get_the_ID(), 'status');
+$status   = (!empty($statuses) && !is_wp_error($statuses)) ? $statuses[0]->name : '';
+
 ?>
 
 <article <?php post_class('sneaker-card'); ?>>
@@ -23,6 +26,9 @@ $brand  = (!empty($brands) && !is_wp_error($brands)) ? $brands[0]->name : '';
         <h2 class="sneaker-card__title">
             <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
         </h2>
+        <?php if ($status !== '') : ?>
+            <p class="sneaker-card__status"><?php echo esc_html($status); ?></p>
+        <?php endif; ?>
 
         <?php if ($brand !== '') : ?>
             <p class="sneaker-card__brand"><?php echo esc_html($brand); ?></p>
